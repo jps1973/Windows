@@ -1,0 +1,196 @@
+
+
+Default IME
+
+MSCTFIME UI
+Default IME
+
+
+MSCTFIME UI
+Battery Meter
+Default IME
+
+
+MSCTFIME UI
+Default IME
+
+Sprig Electron View
+Tray Assistant
+
+
+MSCTFIME UI
+Default IME
+Windows
+
+MSCTFIME UI
+Default IME
+PopupHost
+PopupHost
+PopupHost
+
+Windows - File Explorer
+DesktopWindowXamlSource
+Default IME
+
+Default IME
+
+
+
+
+Default IME
+MSCTFIME UI
+Default IME
+
+
+MSCTFIME UI
+Default IME
+
+Default IME
+
+MSCTFIME UI
+Default IME
+
+DesktopWindowXamlSource
+Default IME
+
+MSCTFIME UI
+Default IME
+GDI+ Window (Explorer.EXE)
+Default IME
+Default IME
+MSCTFIME UI
+Progress
+
+
+Default IME
+AdobeCollabSynchronizerNotification
+Default IME
+
+Default IME
+Default IME
+Settings
+
+Default IME
+Default IME
+Settings
+
+
+
+windows_edb_devicenotify
+Default IME
+
+DropboxShellHookPolaris
+
+Default IME
+
+
+Default IME
+
+DropboxSystemTimeMonitorTrayHook
+DropboxSystemStatusMonitorShellHook
+
+
+
+DropboxFileActivationHandler
+DropboxDropboxUrlScheme
+Default IME
+
+MSCTFIME UI
+Default IME
+Lenovo Process Throttling
+
+GDI+ Window (LenovoPPM.exe)
+Default IME
+.NET-BroadcastEventWindow.4.0.0.0.34f5582.0
+
+NordVPN 
+
+MediaContextNotificationWindow
+
+
+
+Default IME
+
+
+
+Default IME
+
+
+
+
+
+Default IME
+.NET-BroadcastEventWindow.3d893c.0
+Default IME
+GDI+ Window (NordVPN.exe)
+Default IME
+.NET-BroadcastEventWindow.39c82f0.0
+Default IME
+Default IME
+MSCTFIME UI
+SystemResourceNotifyWindow
+
+FNForMonitorMic
+
+Default IME
+CNortonTrayIcon
+GDI+ Window (FnHotkeyUtility.exe)
+Default IME
+FnHotkeyUtility
+Fn_Hotkey_CapsLKNumLK
+Default IME
+
+Default IME
+.NET-BroadcastEventWindow.21af1a5.0
+Default IME
+C:\Windows\system32\AutoModeDetect.exe
+Default IME
+C:\Windows\System32\DriverStore\FileRepository\lnvsst.inf_amd64_f352f4254b85e733\SmartSenseController.exe
+Default IME
+
+
+Default IME
+MS_WebcheckMonitor
+BluetoothNotificationAreaIconWindowClass
+
+Default IME
+MiracastConnectionWindow
+
+Default IME
+
+Default IME
+DDE Server Window
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Default IME
+
+
+
+Windows Push Notifications Platform
+Default IME
+Task Host Window
+DWM Notification Window
+
+MSCTFIME UI
+Default IME
+MSCTFIME UI
+Default IME
+Mail - Jim Smith - Outlook
+MSCTFIME UI
+Default IME
+GetWindowTextA function (winuser.h) - Win32 apps | Microsoft Learn - Brave
+MSCTFIME UI
+Default IME
+Program Manager

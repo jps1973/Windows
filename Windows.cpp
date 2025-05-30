@@ -1,6 +1,6 @@
-// ListView.cpp
+// Windows.cpp
 
-#include "ListView.h"
+#include "Windows.h"
 
 int ShowAboutMessage( HWND hWndParent )
 {
@@ -339,7 +339,7 @@ LRESULT CALLBACK MainWindowProcedure( HWND hWndMain, UINT uMsg, WPARAM wParam, L
 			// A close message
 
 			// Save file
-			if( ListViewWindowSave( TEMPLATE_FILE_NAME ) )
+			if( ListViewWindowSave( WINDOWS_FILE_NAME ) )
 			{
 				// Successfully saved file
 
@@ -499,10 +499,10 @@ int WINAPI WinMain( HINSTANCE hInstance, HINSTANCE, LPSTR, int nCmdShow )
 			UpdateWindow( hWndMain );
 
 			// Populate list view window
-			nItemCount = ListViewWindowPopulate( TEMPLATE_FILE_NAME );
+			nItemCount = ListViewWindowPopulate();
 
 			// Format status message
-			wsprintf( lpszStatusMessage, LIST_VIEW_WINDOW_POPULATE_STATUS_MESSAGE_FORMAT_STRING, TEMPLATE_FILE_NAME, nItemCount );
+			wsprintf( lpszStatusMessage, LIST_VIEW_WINDOW_POPULATE_STATUS_MESSAGE_FORMAT_STRING, nItemCount );
 
 			// Show status message on status bar window
 			StatusBarWindowSetText( lpszStatusMessage );

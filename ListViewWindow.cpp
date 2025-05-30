@@ -437,7 +437,7 @@ int ListViewWindowLoad( LPCTSTR lpszFileName )
 				while( lpszLine )
 				{
 					// Update list view item structure for line
-					lvItem.iSubItem	= LIST_VIEW_WINDOW_FIRST_COLUMN_ID;
+					lvItem.iSubItem	= LIST_VIEW_WINDOW_TEXT_COLUMN_ID;
 					lvItem.pszText	= lpszLine;
 
 					// Add line to list view window
@@ -488,18 +488,90 @@ int ListViewWindowLoad( LPCTSTR lpszFileName )
 
 } // End of function ListViewWindowLoad
 
-int ListViewWindowPopulate( LPCTSTR lpszFileName )
+int ListViewWindowPopulate()
 {
 	int nResult = 0;
+
+	HWND hWndCurrent;
+	LVITEM lvItem;
+	int nInserted;
+
+	// Allocate string memory
+	LPTSTR lpszWindowText		= new char[ STRING_LENGTH + sizeof( char ) ];
+	LPTSTR lpszWindowClassName	= new char[ STRING_LENGTH + sizeof( char ) ];
+
+	// Clear list view item structure
+	ZeroMemory( &lvItem, sizeof( lvItem ) );
+
+	// Initialise list view item structure
+	lvItem.mask			= LVIF_TEXT;
+	lvItem.cchTextMax	= STRING_LENGTH;
+	lvItem.iItem		= 0;
 
 	// Clear list view window
 	SendMessage( g_hWndListView, LB_RESETCONTENT, ( WPARAM )NULL, ( LPARAM )NULL );
 
-	// Load file
-	nResult = ListViewWindowLoad( lpszFileName );
+	// Get top window
+	hWndCurrent = GetTopWindow( NULL );
+
+	// Loop through all windows
+	while( hWndCurrent )
+	{
+		// Get current window text
+		GetWindowText( hWndCurrent, lpszWindowText, STRING_LENGTH );
+
+		// Update list view item structure for current window text
+		lvItem.iSubItem	= LIST_VIEW_WINDOW_TEXT_COLUMN_ID;
+		lvItem.pszText	= lpszWindowText;
+
+		// Add current window text to list view window
+		nInserted = SendMessage( g_hWndListView, LVM_INSERTITEM, ( WPARAM )lvItem.iItem, ( LPARAM )&lvItem );
+
+		// Ensure that current window text was added to list view window
+		if( nInserted >= 0 )
+		{
+			// Successfully added current window text to list view window
+
+			// Update list view item structure
+			lvItem.iItem = nInserted;
+
+			// Get current window class name
+			GetClassName( hWndCurrent, lpszWindowClassName, STRING_LENGTH );
+
+			// Update list view item structure for current window class name
+			lvItem.iSubItem	= LIST_VIEW_WINDOW_CLASS_NAME_COLUMN_ID;
+			lvItem.pszText	= lpszWindowClassName;
+
+			// Show current window class name
+			SendMessage( g_hWndListView, LVM_SETITEM, ( WPARAM )lvItem.iItem, ( LPARAM )&lvItem );
+
+			// Update return value
+			nResult ++;
+
+			// Advance to next item
+			lvItem.iItem ++;
+
+		} // End of successfully added current window text to list view window
+		else
+		{
+			// Unable to add current window text to list view window
+
+			// Force exit from loop
+			lpszWindowText = NULL;
+
+		} // End of unable to add current window text to list view window
+
+		// Get next window
+		hWndCurrent = GetNextWindow( hWndCurrent, GW_HWNDNEXT );
+
+	}; // End of loop through all windows
 
 	// Auto-size all list view window columns
 	ListViewWindowAutoSizeAllColumns();
+
+	// Free string memory
+	delete [] lpszWindowText;
+	delete [] lpszWindowClassName;
 
 	return nResult;
 
@@ -539,7 +611,7 @@ int ListViewWindowSave( LPCTSTR lpszFileName )
 		for( lvItem.iItem = 0; lvItem.iItem < nItemCount; lvItem.iItem ++ )
 		{
 			// Update list view item structure for item
-			lvItem.iSubItem		= LIST_VIEW_WINDOW_FIRST_COLUMN_ID;
+			lvItem.iSubItem		= LIST_VIEW_WINDOW_TEXT_COLUMN_ID;
 
 			// Get item text
 			if( SendMessage( g_hWndListView, LVM_GETITEM, ( WPARAM )NULL, ( LPARAM )&lvItem ) )

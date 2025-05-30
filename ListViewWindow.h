@@ -14,15 +14,16 @@
 #define LIST_VIEW_WINDOW_STYLE													( WS_CHILD | WS_VISIBLE | WS_BORDER | LVS_REPORT )
 #define LIST_VIEW_WINDOW_TEXT													NULL
 
-#define LIST_VIEW_WINDOW_POPULATE_STATUS_MESSAGE_FORMAT_STRING					"%s (%d items )"
+#define LIST_VIEW_WINDOW_POPULATE_STATUS_MESSAGE_FORMAT_STRING					"%d items"
 
 #define LIST_VIEW_WINDOW_UNABLE_TO_SAVE_WARNING_MESSAGE							"Unable to save.\r\n\r\nDo you want to close?"
 
-#define LIST_VIEW_WINDOW_COLUMN_TITLES											{ "First" }
+#define LIST_VIEW_WINDOW_COLUMN_TITLES											{ "Text", "Class" }
 
 typedef enum
 {
-	LIST_VIEW_WINDOW_FIRST_COLUMN_ID = 0,
+	LIST_VIEW_WINDOW_TEXT_COLUMN_ID = 0,
+	LIST_VIEW_WINDOW_CLASS_NAME_COLUMN_ID,
 
 	LIST_VIEW_WINDOW_NUMBER_OF_COLUMNS
 
@@ -50,7 +51,7 @@ BOOL ListViewWindowMove( int nX, int nY, int nWidth, int nHeight, BOOL bRepaint 
 
 int ListViewWindowLoad( LPCTSTR lpszFileName );
 
-int ListViewWindowPopulate( LPCTSTR lpszFileName );
+int ListViewWindowPopulate();
 
 int ListViewWindowSave( LPCTSTR lpszFileName );
 
