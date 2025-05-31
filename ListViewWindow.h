@@ -41,6 +41,8 @@ int CALLBACK ListViewWindowCompare( LPARAM lParam1, LPARAM lParam2, LPARAM lPara
 
 BOOL ListViewWindowCreate( HWND hWndParent, HINSTANCE hInstance );
 
+int ListViewWindowGetColumnCount();
+
 BOOL ListViewWindowGetItemText( int nWhichItem, int nWhichSubItem, LPTSTR lpszItemText, DWORD dwMaximumTextLength = STRING_LENGTH );
 
 BOOL ListViewWindowGetRect( LPRECT lpRect );
@@ -53,7 +55,7 @@ int ListViewWindowLoad( LPCTSTR lpszFileName );
 
 int ListViewWindowPopulate();
 
-int ListViewWindowSave( LPCTSTR lpszFileName );
+int ListViewWindowSave( LPCTSTR lpszFileName, LPCTSTR lpszItemSeparator = ASCII_COMMA_STRING );
 
 HWND ListViewWindowSetFocus();
 

@@ -169,6 +169,29 @@ BOOL ListViewWindowCreate( HWND hWndParent, HINSTANCE hInstance )
 
 } // End of function ListViewWindowCreate
 
+int ListViewWindowGetColumnCount()
+{
+	int nResult = 0;
+
+	HWND hWndListViewHeaderControl;
+
+	// Get list view header control window
+	hWndListViewHeaderControl = ( HWND )SendMessage( g_hWndListView, LVM_GETHEADER, ( WPARAM )NULL, ( LPARAM )NULL );
+
+	// Ensure that list view header control window was got
+	if( hWndListViewHeaderControl )
+	{
+		// Successfully got list view header control window
+
+		// Count items in list view header control window
+		nResult = ( int )SendMessage( hWndListViewHeaderControl, HDM_GETITEMCOUNT, ( WPARAM )NULL, ( LPARAM )NULL );
+
+	} // End of successfully got list view header control window
+
+	return nResult;
+
+} // End of function ListViewWindowGetColumnCount
+
 BOOL ListViewWindowGetItemText( int nWhichItem, int nWhichSubItem, LPTSTR lpszItemText, DWORD dwMaximumTextLength )
 {
 	BOOL bResult = FALSE;
@@ -540,7 +563,7 @@ int ListViewWindowPopulate()
 
 } // End of function ListViewWindowPopulate
 
-int ListViewWindowSave( LPCTSTR lpszFileName )
+int ListViewWindowSave( LPCTSTR lpszFileName, LPCTSTR lpszItemSeparator )
 {
 	int nResult = 0;
 
@@ -554,7 +577,9 @@ int ListViewWindowSave( LPCTSTR lpszFileName )
 	{
 		// Successfully created file
 		int nItemCount;
+		int nColumnCount;
 		LVITEM lvItem;
+		DWORD dwItemSeperatorLength;
 
 		// Allocate string memory
 		LPTSTR lpszItemText = new char[ STRING_LENGTH + sizeof( char ) ];
@@ -567,50 +592,63 @@ int ListViewWindowSave( LPCTSTR lpszFileName )
 		lvItem.cchTextMax	= STRING_LENGTH;
 		lvItem.pszText		= lpszItemText;
 
+		// Store item separator length
+		dwItemSeperatorLength = lstrlen( lpszItemSeparator );
+
 		// Count items on list view window
 		nItemCount = SendMessage( g_hWndListView, LVM_GETITEMCOUNT, ( WPARAM )NULL, ( LPARAM )NULL );
+
+		// Count columns on list view window
+		nColumnCount = ListViewWindowGetColumnCount();
 
 		// Loop through items on list view window
 		for( lvItem.iItem = 0; lvItem.iItem < nItemCount; lvItem.iItem ++ )
 		{
-			// Update list view item structure for item
-			lvItem.iSubItem		= LIST_VIEW_WINDOW_TEXT_COLUMN_ID;
-
-			// Get item text
-			if( SendMessage( g_hWndListView, LVM_GETITEM, ( WPARAM )NULL, ( LPARAM )&lvItem ) )
+			// Loop through columns on list view window
+			for( lvItem.iSubItem = 0; lvItem.iSubItem < nColumnCount; lvItem.iSubItem ++ )
 			{
-				// Successfully got item text
-
-				// Write item text to file
-				if( WriteFile( hFile, lpszItemText, lstrlen( lpszItemText ), NULL, NULL ) )
+				// Get item text
+				if( SendMessage( g_hWndListView, LVM_GETITEM, ( WPARAM )NULL, ( LPARAM )&lvItem ) )
 				{
-					// Successfully wrote item text to file
+					// Successfully got item text
 
-					// Write new line text to file
-					WriteFile( hFile, NEW_LINE_TEXT, lstrlen( NEW_LINE_TEXT ), NULL, NULL );
+					// Write item text to file
+					if( WriteFile( hFile, lpszItemText, lstrlen( lpszItemText ), NULL, NULL ) )
+					{
+						// Successfully wrote item text to file
 
-					// Update return value
-					nResult ++;
+						// Write item separator to file
+						WriteFile( hFile, lpszItemSeparator, dwItemSeperatorLength, NULL, NULL );
 
-				} // End of successfully wrote item text to file
+						// Update return value
+						nResult ++;
+
+					} // End of successfully wrote item text to file
+					else
+					{
+						// Unable to write item text to file
+
+						// Force exit from loops
+						lvItem.iItem	= nItemCount;
+						lvItem.iSubItem	= nColumnCount;
+
+					} // End of unable to write item text to file
+
+				} // End of successfully got item text
 				else
 				{
-					// Unable to write item text to file
+					// Unable to get item text
 
-					// Force exit from loop
-					lvItem.iItem = nItemCount;
+					// Force exit from loops
+					lvItem.iItem	= nItemCount;
+					lvItem.iSubItem	= nColumnCount;
 
-				} // End of unable to write item text to file
+				} // End of unable to get item text
 
-			} // End of successfully got item text
-			else
-			{
-				// Unable to get item text
+			}; // End of loop through columns on list view window
 
-				// Force exit from loop
-				lvItem.iItem = nItemCount;
-
-			} // End of unable to get item text
+			// Write new line text to file
+			WriteFile( hFile, NEW_LINE_TEXT, lstrlen( NEW_LINE_TEXT ), NULL, NULL );
 
 		}; // End of loop through items on list view window
 

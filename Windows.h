@@ -31,7 +31,7 @@
 #define SYSTEM_MENU_ABOUT_ITEM_POSITION											6
 #define SYSTEM_MENU_ABOUT_ITEM_TEXT												"About"
 
-#define WINDOWS_FILE_NAME														"Windows.txt"
+#define WINDOWS_FILE_NAME														"Windows.csv"
 
 #define ABOUT_MESSAGE_TEXT														"Windows\r\n"						\
 																				"\r\n"								\
