@@ -16,6 +16,8 @@
 
 #define LIST_VIEW_WINDOW_POPULATE_STATUS_MESSAGE_FORMAT_STRING					"%d items"
 
+#define LIST_VIEW_WINDOW_CLOSE_WINDOW_WARNING_MESSAGE_FORMAT_STRING				"Close Window?\r\n\r\nText:\t%s\r\nClass\t%s"
+
 #define LIST_VIEW_WINDOW_UNABLE_TO_SAVE_WARNING_MESSAGE							"Unable to save.\r\n\r\nDo you want to close?"
 
 #define LIST_VIEW_WINDOW_COLUMN_TITLES											{ "Text", "Class" }
@@ -42,8 +44,6 @@ BOOL ListViewWindowCreate( HWND hWndParent, HINSTANCE hInstance );
 BOOL ListViewWindowGetItemText( int nWhichItem, int nWhichSubItem, LPTSTR lpszItemText, DWORD dwMaximumTextLength = STRING_LENGTH );
 
 BOOL ListViewWindowGetRect( LPRECT lpRect );
-
-BOOL ListViewWindowHandleCommandMessage( WPARAM wParam, LPARAM lParam, BOOL( *lpStatusFunction )( LPCTSTR lpszItemText ) );
 
 BOOL ListViewWindowHandleNotifyMessage( WPARAM wParam, LPARAM lParam, BOOL( *lpStatusFunction )( LPCTSTR lpszItemText ) );
 

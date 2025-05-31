@@ -209,30 +209,8 @@ LRESULT CALLBACK MainWindowProcedure( HWND hWndMain, UINT uMsg, WPARAM wParam, L
 				{
 					// Default command
 
-					// See if command message is from list view window
-					if( IsListViewWindow( ( HWND )lParam ) )
-					{
-						// Command message is from list view window
-
-						// Handle command message from list view window
-						if( !( ListViewWindowHandleCommandMessage( wParam, lParam, &StatusBarWindowSetText ) ) )
-						{
-							// Command message was not handled from list view window
-
-							// Call default procedure
-							lr = DefWindowProc( hWndMain, uMsg, wParam, lParam );
-
-						} // End of command message was not handled from list view window
-
-					} // End of command message is from list view window
-					else
-					{
-						// Command message is not from list view window
-
-						// Call default procedure
-						lr = DefWindowProc( hWndMain, uMsg, wParam, lParam );
-
-					} // End of command message is not from list view window
+					// Call default procedure
+					lr = DefWindowProc( hWndMain, uMsg, wParam, lParam );
 
 					// Break out of switch
 					break;

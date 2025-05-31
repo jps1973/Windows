@@ -79,8 +79,8 @@ int CALLBACK ListViewWindowCompare( LPARAM lParam1, LPARAM lParam2, LPARAM lPara
 	LVITEM lvItem;
 
 	// Allocate string memory
-	LPTSTR lpszItem1 = new char[ STRING_LENGTH ];
-	LPTSTR lpszItem2 = new char[ STRING_LENGTH ];
+	LPTSTR lpszItem1 = new char[ STRING_LENGTH + sizeof( char ) ];
+	LPTSTR lpszItem2 = new char[ STRING_LENGTH + sizeof( char ) ];
 
 	// Clear list view item structure
 	ZeroMemory( &lvItem, sizeof( lvItem ) );
@@ -199,86 +199,6 @@ BOOL ListViewWindowGetRect( LPRECT lpRect )
 
 } // End of function ListViewWindowGetRect
 
-BOOL ListViewWindowHandleCommandMessage( WPARAM wParam, LPARAM, BOOL( *lpStatusFunction )( LPCTSTR lpszItemText ) )
-{
-	BOOL bResult = FALSE;
-
-	// Select list view window notification code
-	switch( HIWORD( wParam ) )
-	{
-		case LBN_DBLCLK:
-		{
-			// A list view window double click notification code
-			int nSelectedItem;
-
-			// Allocate string memory
-			LPTSTR lpszSelected = new char[ STRING_LENGTH + sizeof( char ) ];
-
-			// Get selected item
-			nSelectedItem = SendMessage( g_hWndListView, LB_GETCURSEL, ( WPARAM )NULL, ( LPARAM )NULL );
-
-			// Get selected item text
-			if( SendMessage( g_hWndListView, LB_GETTEXT, ( WPARAM )nSelectedItem, ( LPARAM )lpszSelected ) )
-			{
-				// Successfully got selected item text
-
-				// Display selected item text
-				MessageBox( NULL, lpszSelected, INFORMATION_MESSAGE_CAPTION, ( MB_OK | MB_ICONINFORMATION ) );
-
-			} // End of successfully got selected item text
-
-			// Free string memory
-			delete [] lpszSelected;
-
-			// Break out of switch
-			break;
-
-		} // End of a list view window double click notification code
-		case LBN_SELCHANGE:
-		{
-			// A list view window selection change notification code
-			int nSelectedItem;
-
-			// Allocate string memory
-			LPTSTR lpszSelected = new char[ STRING_LENGTH + sizeof( char ) ];
-
-			// Get selected item
-			nSelectedItem = SendMessage( g_hWndListView, LB_GETCURSEL, ( WPARAM )NULL, ( LPARAM )NULL );
-
-			// Get selected item text
-			if( SendMessage( g_hWndListView, LB_GETTEXT, ( WPARAM )nSelectedItem, ( LPARAM )lpszSelected ) )
-			{
-				// Successfully got selected item text
-
-				// Show selected item text on status bar window
-				( *lpStatusFunction )( lpszSelected );
-
-			} // End of successfully got selected item text
-
-			// Free string memory
-			delete [] lpszSelected;
-
-			// Break out of switch
-			break;
-
-		} // End of a list view window selection change notification code
-		default:
-		{
-			// Default notification code
-
-			// No need to do anything here, just continue with default result
-
-			// Break out of switch
-			break;
-
-		} // End of default notification code
-
-	}; // End of selection for list view window notification code
-
-	return bResult;
-
-} // End of function ListViewWindowHandleCommandMessage
-
 BOOL ListViewWindowHandleNotifyMessage( WPARAM, LPARAM lParam, BOOL( *lpStatusFunction )( LPCTSTR lpszItemText ) )
 {
 	BOOL bResult = FALSE;
@@ -296,20 +216,63 @@ BOOL ListViewWindowHandleNotifyMessage( WPARAM, LPARAM lParam, BOOL( *lpStatusFu
 			// A double click notify message
 
 			// Allocate string memory
-			LPTSTR lpszFilePath = new char[ STRING_LENGTH ];
+			LPTSTR lpszWindowText = new char[ STRING_LENGTH + sizeof( char ) ];
 
-			// Get file path
-			if( ListViewWindowGetItemText( lpNmListView->iItem, lpNmListView->iSubItem, lpszFilePath ) )
+			// Get window text
+			if( ListViewWindowGetItemText( lpNmListView->iItem, LIST_VIEW_WINDOW_TEXT_COLUMN_ID, lpszWindowText ) )
 			{
-				// Successfully got file path
+				// Successfully got window text
 
-				// Display file path
-				MessageBox( NULL, lpszFilePath, INFORMATION_MESSAGE_CAPTION, ( MB_OK | MB_ICONINFORMATION ) );
+				// Allocate string memory
+				LPTSTR lpszWindowClassName = new char[ STRING_LENGTH + sizeof( char ) ];
 
-			} // End of successfully got file path
+				// Get window class name
+				if( ListViewWindowGetItemText( lpNmListView->iItem, LIST_VIEW_WINDOW_CLASS_NAME_COLUMN_ID, lpszWindowClassName ) )
+				{
+					// Successfully got window class name
+
+					// Allocate string memory
+					LPTSTR lpszWarningMessage = new char[ STRING_LENGTH + sizeof( char ) ];
+
+					// Format warning text
+					wsprintf( lpszWarningMessage, LIST_VIEW_WINDOW_CLOSE_WINDOW_WARNING_MESSAGE_FORMAT_STRING, lpszWindowText, lpszWindowClassName );
+
+					// Ensure that user wants to close window
+					if( MessageBox( NULL, lpszWarningMessage, WARNING_MESSAGE_CAPTION, ( MB_YESNO | MB_DEFBUTTON2 | MB_ICONWARNING ) ) == IDYES )
+					{
+						// User wants to close window
+						HWND hWnd;
+
+						// Find window
+						hWnd = FindWindow( lpszWindowClassName, lpszWindowText );
+
+						// Ensure that window was found
+						if( hWnd )
+						{
+							// Successfully found window
+
+							// Close window
+							SendMessage( hWnd, WM_CLOSE, ( WPARAM )NULL, ( LPARAM )NULL );
+
+							// Remove window from list view window
+							SendMessage( g_hWndListView, LVM_DELETEITEM, ( WPARAM )lpNmListView->iItem, ( LPARAM )NULL );
+
+						} // End of successfully found window
+
+					} // End of user wants to close window
+
+					// Free string memory
+					delete [] lpszWarningMessage;
+
+				} // End of successfully got window class name
+
+				// Free string memory
+				delete [] lpszWindowClassName;
+
+			} // End of successfully got window text
 
 			// Free string memory
-			delete [] lpszFilePath;
+			delete [] lpszWindowText;
 
 			// Break out of switch
 			break;
@@ -336,20 +299,20 @@ BOOL ListViewWindowHandleNotifyMessage( WPARAM, LPARAM lParam, BOOL( *lpStatusFu
 				// Item state has changed to selected
 
 				// Allocate string memory
-				LPTSTR lpszItemText = new char[ STRING_LENGTH + sizeof( char ) ];
+				LPTSTR lpszWindowText = new char[ STRING_LENGTH + sizeof( char ) ];
 
-				// Get item text
-				if( ListViewWindowGetItemText( lpNmListView->iItem, lpNmListView->iSubItem, lpszItemText ) )
+				// Get window text
+				if( ListViewWindowGetItemText( lpNmListView->iItem, LIST_VIEW_WINDOW_TEXT_COLUMN_ID, lpszWindowText ) )
 				{
-					// Successfully got item text
+					// Successfully got window text
 
 					// Call status function
-					bResult = ( *lpStatusFunction )( lpszItemText );
+					bResult = ( *lpStatusFunction )( lpszWindowText );
 
-				} // End of successfully got item text
+				} // End of successfully got window text
 
 				// Free string memory
-				delete [] lpszItemText;
+				delete [] lpszWindowText;
 
 			} // End of item state has changed to selected
 
